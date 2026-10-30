@@ -50,15 +50,24 @@ export const LibraryModal: React.FC<LibraryModalProps> = ({
       b.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const isPdfFile = (file: File) => {
+    return (
+      file.type === 'application/pdf' ||
+      file.type === 'application/x-pdf' ||
+      file.type === 'application/acrobat' ||
+      file.name.toLowerCase().endsWith('.pdf')
+    );
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      if (isPdfFile(file)) {
         await onUploadPDF(file);
-        if (fileInputRef.current) fileInputRef.current.value = '';
       } else {
-        alert('Please select a valid PDF file.');
+        alert('Please select a valid PDF file (.pdf).');
       }
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -67,10 +76,10 @@ export const LibraryModal: React.FC<LibraryModalProps> = ({
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
-      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      if (isPdfFile(file)) {
         await onUploadPDF(file);
       } else {
-        alert('Please drop a valid PDF file.');
+        alert('Please drop a valid PDF file (.pdf).');
       }
     }
   };
@@ -112,7 +121,7 @@ export const LibraryModal: React.FC<LibraryModalProps> = ({
             <input
               ref={fileInputRef}
               type="file"
-              accept="application/pdf"
+              accept=".pdf,application/pdf"
               className="hidden"
               onChange={handleFileChange}
             />

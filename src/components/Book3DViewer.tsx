@@ -55,6 +55,11 @@ export const Book3DViewer: React.FC<Book3DViewerProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Clear rendered page cache whenever document changes
+  useEffect(() => {
+    pageCache.current.clear();
+  }, [pdf]);
+
   const isDual = viewMode === 'dual' ? true : viewMode === 'single' ? false : !isMobile;
 
   // In dual mode:

@@ -37,7 +37,8 @@ export async function saveBookMetadata(metadata: BookMetadata): Promise<void> {
 export async function savePDFData(id: string, data: ArrayBuffer | Blob): Promise<void> {
   let blobToStore: Blob;
   if (data instanceof Blob) {
-    blobToStore = data;
+    const arrayBuf = await data.arrayBuffer();
+    blobToStore = new Blob([arrayBuf], { type: 'application/pdf' });
   } else {
     // Clone slice to guarantee it cannot be detached by caller or worker
     const bufferCopy = data.slice(0);

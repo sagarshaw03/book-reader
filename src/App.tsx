@@ -221,26 +221,27 @@ export default function App() {
       setLoadingMessage(`Importing "${file.name}" into Folio...`);
       setErrorMessage(null);
 
-      const wrapper = await loadPDFFromBuffer(file);
+      const arrayBuffer = await file.arrayBuffer();
+      const wrapper = await loadPDFFromBuffer(arrayBuffer.slice(0));
 
       // Generate cover thumbnail
       let coverThumbnail: string | undefined;
       try {
         coverThumbnail = await generatePageThumbnail(wrapper.pdf, 1, 320);
-      } catch {
-        // continue without thumb
+      } catch (thumbErr) {
+        console.warn('Cover thumbnail generation skipped:', thumbErr);
       }
 
       const bookId = `book-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
       const cleanTitle =
-        wrapper.title !== 'Untitled Book'
+        wrapper.title && wrapper.title !== 'Untitled Book'
           ? wrapper.title
           : file.name.replace(/\.pdf$/i, '').replace(/[-_]/g, ' ');
 
       const newBook: BookMetadata = {
         id: bookId,
         title: cleanTitle,
-        author: wrapper.author !== 'Unknown Author' ? wrapper.author : 'Imported Document',
+        author: wrapper.author && wrapper.author !== 'Unknown Author' ? wrapper.author : 'Imported Document',
         totalPages: wrapper.numPages,
         fileSize: file.size,
         dateAdded: Date.now(),
@@ -250,7 +251,7 @@ export default function App() {
         coverThumbnail,
       };
 
-      await savePDFData(bookId, file);
+      await savePDFData(bookId, arrayBuffer.slice(0));
       await saveBookMetadata(newBook);
 
       // Update state
@@ -261,6 +262,8 @@ export default function App() {
       setCurrentPage(1);
 
       setIsLibraryOpen(false);
+      setIsResumeModalOpen(false);
+      setPendingBookForResume(null);
 
       // Celebratory paper confetti!
       confetti({
@@ -271,7 +274,8 @@ export default function App() {
       });
     } catch (err) {
       console.error('Upload error:', err);
-      alert('Could not parse the PDF file. Please ensure it is a valid, unencrypted PDF.');
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      alert(`Could not parse the PDF file: ${msg}. Please ensure it is a valid PDF.`);
     } finally {
       setIsLoading(false);
     }
@@ -421,11 +425,12 @@ export default function App() {
       <input
         ref={hiddenFileInputRef}
         type="file"
-        accept="application/pdf"
+        accept=".pdf,application/pdf"
         className="hidden"
         onChange={(e) => {
           if (e.target.files && e.target.files[0]) {
             handleUploadPDF(e.target.files[0]);
+            e.target.value = '';
           }
         }}
       />
@@ -500,6 +505,7 @@ export default function App() {
             </div>
           ) : activePdfWrapper && activeBook ? (
             <Book3DViewer
+              key={activeBook.id}
               pdf={activePdfWrapper.pdf}
               totalPages={activePdfWrapper.numPages}
               currentPage={currentPage}

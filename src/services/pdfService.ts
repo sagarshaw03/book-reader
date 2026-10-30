@@ -1,18 +1,9 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import { TableOfContentItem } from '../types/book';
 
-// Set up worker source
+// Set up local worker source
 if (typeof window !== 'undefined') {
-  try {
-    // Attempt local worker resolution
-    pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-      'pdfjs-dist/build/pdf.worker.mjs',
-      import.meta.url
-    ).toString();
-  } catch {
-    // Fallback to unpkg CDN matching the installed version
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 }
 
 export interface PDFDocumentWrapper {
@@ -42,8 +33,9 @@ export async function loadPDFFromBuffer(
 
   const loadingTask = pdfjsLib.getDocument({
     data,
-    cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+    cMapUrl: '/cmaps/',
     cMapPacked: true,
+    standardFontDataUrl: '/standard_fonts/',
   });
 
   const pdf = await loadingTask.promise;
