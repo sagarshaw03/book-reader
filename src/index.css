@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .perspective-1800 {
+    perspective: 1800px;
+  }
+  .perspective-2400 {
+    perspective: 2400px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+}
+
+/* Custom book paper textures and gradients */
+.paper-cream {
+  background-color: #fbf8ee;
+  background-image: radial-gradient(#ebe3cd 8%, transparent 8%), radial-gradient(#e4dac1 8%, transparent 8%);
+  background-position: 0 0, 10px 10px;
+  background-size: 20px 20px;
+}
+
+.paper-parchment {
+  background-color: #f4ecd8;
+  background-image: linear-gradient(to right, rgba(0,0,0,0.05) 0%, transparent 8%, transparent 92%, rgba(0,0,0,0.05) 100%);
+}
+
+.paper-sepia {
+  background-color: #f3e9d2;
+}
+
+.paper-dark {
+  background-color: #1e1e24;
+  color: #d1d5db;
+}
+
+/* Book binding spine shadows */
+.spine-shadow-left {
+  background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.04) 75%, rgba(0,0,0,0.18) 97%, rgba(0,0,0,0.28) 100%);
+}
+
+.spine-shadow-right {
+  background: linear-gradient(to left, rgba(0,0,0,0) 0%, rgba(0,0,0,0.04) 75%, rgba(0,0,0,0.18) 97%, rgba(0,0,0,0.28) 100%);
+}
+
+.book-shadow-3d {
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.45),
+    0 10px 20px -5px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.page-edge-layers-right {
+  box-shadow: 
+    3px 0 0 #eae5d7,
+    5px 0 0 #dfd9c9,
+    7px 0 0 #d4cdbb,
+    9px 0 0 #c8c0ad,
+    11px 0 3px rgba(0,0,0,0.2);
+}
+
+.page-edge-layers-left {
+  box-shadow: 
+    -3px 0 0 #eae5d7,
+    -5px 0 0 #dfd9c9,
+    -7px 0 0 #d4cdbb,
+    -9px 0 0 #c8c0ad,
+    -11px 0 3px rgba(0,0,0,0.2);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}

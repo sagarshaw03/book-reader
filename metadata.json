@@ -1,0 +1,6 @@
+{
+  "name": "Folio Reader - Interactive 3D Book & PDF Reader",
+  "description": "An elegant 3D page-flipping book reader for PDF documents with bookmarks, table of contents outline, memory library, and dual/single page view.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
